@@ -38,8 +38,8 @@ public:
     QLabel *label_5;
     QPushButton *runbtn;
     QPushButton *stopbtn;
-    RenderWindow *openGLWidget;
-    RenderWindow *drawwidg;
+    RenderWindow *emccdDisp;
+    RenderWindow *cmosDisp;
     QLabel *label_6;
     QLabel *label_7;
     QPushButton *drawbtn;
@@ -98,22 +98,22 @@ public:
         stopbtn = new QPushButton(KronosClass);
         stopbtn->setObjectName(QStringLiteral("stopbtn"));
         stopbtn->setGeometry(QRect(440, 230, 75, 23));
-        openGLWidget = new RenderWindow(KronosClass);
-        openGLWidget->setObjectName(QStringLiteral("openGLWidget"));
-        openGLWidget->setGeometry(QRect(70, 540, 551, 381));
-        drawwidg = new RenderWindow(KronosClass);
-        drawwidg->setObjectName(QStringLiteral("drawwidg"));
-        drawwidg->setGeometry(QRect(580, 90, 501, 401));
-        drawwidg->setToolTipDuration(-13);
+        emccdDisp = new RenderWindow(KronosClass);
+        emccdDisp->setObjectName(QStringLiteral("emccdDisp"));
+        emccdDisp->setGeometry(QRect(20, 520, 551, 411));
+        cmosDisp = new RenderWindow(KronosClass);
+        cmosDisp->setObjectName(QStringLiteral("cmosDisp"));
+        cmosDisp->setGeometry(QRect(580, 520, 531, 411));
+        cmosDisp->setToolTipDuration(-13);
         label_6 = new QLabel(KronosClass);
         label_6->setObjectName(QStringLiteral("label_6"));
-        label_6->setGeometry(QRect(210, 500, 47, 13));
+        label_6->setGeometry(QRect(280, 500, 47, 13));
         label_7 = new QLabel(KronosClass);
         label_7->setObjectName(QStringLiteral("label_7"));
-        label_7->setGeometry(QRect(790, 60, 47, 13));
+        label_7->setGeometry(QRect(830, 500, 47, 13));
         drawbtn = new QPushButton(KronosClass);
         drawbtn->setObjectName(QStringLiteral("drawbtn"));
-        drawbtn->setGeometry(QRect(770, 540, 75, 23));
+        drawbtn->setGeometry(QRect(410, 350, 75, 23));
 
         retranslateUi(KronosClass);
 

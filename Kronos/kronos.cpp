@@ -18,7 +18,7 @@ Kronos::Kronos(QWidget *parent)
 	ui.lineEdit->setText(*unit);
 	ui.yvel->setText(*yvelocity);
 	ui.xvel->setText(*xvelocity);
-	connect(this, SIGNAL(update_draw()), ui.drawwidg, SLOT(on_update_draw()));
+	connect(this, SIGNAL(update_draw()), ui.cmosDisp, SLOT(on_update_draw()));
 }
 
 void Kronos::on_forwardbtn_clicked() {
@@ -84,6 +84,6 @@ void Kronos::on_xvel_returnPressed() {
 }
 
 void Kronos::on_drawbtn_clicked() {
-	ui.drawwidg->setEnds(0, 50, 350, 50);
-	ui.drawwidg->update();
+	ui.cmosDisp->setEnds(0, 50, 350, 50);
+	ui.cmosDisp->update();
 }

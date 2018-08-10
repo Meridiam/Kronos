@@ -215,23 +215,23 @@
     <string>Stop</string>
    </property>
   </widget>
-  <widget class="RenderWindow" name="openGLWidget">
+  <widget class="RenderWindow" name="emccdDisp">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>540</y>
+     <x>20</x>
+     <y>520</y>
      <width>551</width>
-     <height>381</height>
+     <height>411</height>
     </rect>
    </property>
   </widget>
-  <widget class="RenderWindow" name="drawwidg">
+  <widget class="RenderWindow" name="cmosDisp">
    <property name="geometry">
     <rect>
      <x>580</x>
-     <y>90</y>
-     <width>501</width>
-     <height>401</height>
+     <y>520</y>
+     <width>531</width>
+     <height>411</height>
     </rect>
    </property>
    <property name="toolTipDuration">
@@ -241,7 +241,7 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>280</x>
      <y>500</y>
      <width>47</width>
      <height>13</height>
@@ -254,8 +254,8 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>790</x>
-     <y>60</y>
+     <x>830</x>
+     <y>500</y>
      <width>47</width>
      <height>13</height>
     </rect>
@@ -267,8 +267,8 @@
   <widget class="QPushButton" name="drawbtn">
    <property name="geometry">
     <rect>
-     <x>770</x>
-     <y>540</y>
+     <x>410</x>
+     <y>350</y>
      <width>75</width>
      <height>23</height>
     </rect>
