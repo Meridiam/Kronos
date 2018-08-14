@@ -82,8 +82,3 @@ void Kronos::on_yvel_returnPressed() {
 void Kronos::on_xvel_returnPressed() {
 	xvelocity = new QString(ui.xvel->text());
 }
-
-void Kronos::on_drawbtn_clicked() {
-	ui.cmosDisp->setEnds(0, 50, 350, 50);
-	ui.cmosDisp->update();
-}

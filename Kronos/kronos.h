@@ -29,5 +29,4 @@ private slots:
 	void on_lineEdit_returnPressed();
 	void on_yvel_returnPressed();
 	void on_xvel_returnPressed();
-	void on_drawbtn_clicked();
 };

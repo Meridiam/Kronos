@@ -42,7 +42,7 @@ public:
     RenderWindow *cmosDisp;
     QLabel *label_6;
     QLabel *label_7;
-    QPushButton *drawbtn;
+    QPushButton *pushButton;
 
     void setupUi(QWidget *KronosClass)
     {
@@ -111,9 +111,9 @@ public:
         label_7 = new QLabel(KronosClass);
         label_7->setObjectName(QStringLiteral("label_7"));
         label_7->setGeometry(QRect(830, 500, 47, 13));
-        drawbtn = new QPushButton(KronosClass);
-        drawbtn->setObjectName(QStringLiteral("drawbtn"));
-        drawbtn->setGeometry(QRect(410, 350, 75, 23));
+        pushButton = new QPushButton(KronosClass);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+        pushButton->setGeometry(QRect(530, 350, 75, 23));
 
         retranslateUi(KronosClass);
 
@@ -138,7 +138,7 @@ public:
         stopbtn->setText(QApplication::translate("KronosClass", "Stop", nullptr));
         label_6->setText(QApplication::translate("KronosClass", "EMCCD", nullptr));
         label_7->setText(QApplication::translate("KronosClass", "CMOS", nullptr));
-        drawbtn->setText(QApplication::translate("KronosClass", "Draw", nullptr));
+        pushButton->setText(QApplication::translate("KronosClass", "PushButton", nullptr));
     } // retranslateUi
 
 };

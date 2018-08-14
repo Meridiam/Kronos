@@ -15,8 +15,10 @@ public:
 	void resizeGL(int w, int h) override;
 	void setImage(const char * const uri);
 	void mousePressEvent(QMouseEvent * event);
+	QPoint * mapPointToGrid(QPoint pt);
 	void mouseReleaseEvent(QMouseEvent * event);
-	void setEnds(int sx, int sy, int ex, int ey);
+	QPoint * getOrigin();
+	QPoint * getEnd();
 	void initializeGL() override;
 
 private:
@@ -24,5 +26,7 @@ private:
 	QImage * img;
 	QPoint * start;
 	QPoint * end;
-	int nearestMicronValue(int pv, double fac);
+	QColor * guideColor;
+	int pixelspermicron;
+	int pixelCoordToGridCoord(int pv);
 };

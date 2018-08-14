@@ -2,15 +2,27 @@
 #include "renderwindow.h"
 
 RenderWindow::RenderWindow(QWidget *parent)
-	: QOpenGLWidget(parent)
+	: QOpenGLWidget(parent),
+	guideColor(new QColor(211, 211, 211, 75)),
+	start(NULL),
+	end(NULL),
+	img(NULL),
+//	pixelspermicron will always be ceil(actual pixels per micron) 
+//	because actual pixels per micron could be floating point value, 
+//	which is obviously impossible to render on a screen.
+	pixelspermicron(16)
 {
 	ui.setupUi(this);
 }
+
 void RenderWindow::initializeGL() 
 {
-	start = new QPoint(rect().topLeft());
-	end = new QPoint(rect().bottomRight());
-	img = new QImage("C:\\Users\\Scarcelli Lab\\Downloads\\picture1.png");
+	// initialize state upon loading UI
+	if (start == NULL) {
+		start = mapPointToGrid(rect().center());
+		end = mapPointToGrid(rect().center());
+		img = new QImage("C:\\Users\\Scarcelli Lab\\Downloads\\picture1.png");
+	}
 }
 
 void RenderWindow::paintGL()
@@ -26,35 +38,39 @@ void RenderWindow::paintGL()
 	int boty = rect().bottomLeft().y();
 
 	p.drawImage(rect().topLeft(), *img);
-	p.setPen(Qt::gray);
 
-	int microns = 0;
-	int totalmicronsx = floor(rect().topRight().x() * .107);
-	while (microns < totalmicronsx) {
-		p.drawLine((int) round(microns / .107), boty, (int) round(microns / .107), topy);
-		microns += 1;
+	// Draw guide lines based on number of pixels per "micron"
+	p.setPen(*guideColor);
+
+	int dist = 0;
+	while (dist < rightx) {
+		p.drawLine((int) dist, boty, dist, topy);
+		dist += pixelspermicron;
 	}
 
-	microns = 0;
-	int totalmicronsy = floor(rect().bottomRight().y() * .107);
-	while (microns < totalmicronsy) {
-		p.drawLine(leftx, (int)round(microns / .107), rightx, (int)round(microns / .107));
-		microns += 1;
+	dist = 0;
+	while (dist < boty) {
+		p.drawLine(leftx, dist, rightx, dist);
+		dist += pixelspermicron;
 	}
+
+	// Draw lines to bound selection
 	p.setPen(Qt::red);
 	p.drawLine(startx, topy, startx, boty);
 	p.drawLine(leftx, starty, rightx, starty);
 	p.drawLine(endx, topy, endx, boty);
 	p.drawLine(leftx, endy, rightx, endy);
+
+	// Draw end indicator
 	p.drawEllipse(*end, 4, 4);
+
+	// Draw origin indicator
 	p.setPen(Qt::green);
 	p.drawEllipse(*start, 4, 4);
 	p.drawPoint(*start);
 }
 
-void RenderWindow::resizeGL(int w, int h)
-{
-}
+void RenderWindow::resizeGL(int w, int h) {}
 
 void RenderWindow::setImage(const char * const uri) {
 	delete img;
@@ -63,29 +79,35 @@ void RenderWindow::setImage(const char * const uri) {
 
 void RenderWindow::mousePressEvent(QMouseEvent * event) {
 	delete start;
-	start = new QPoint(nearestMicronValue(event->x(), 0.107), nearestMicronValue(event->y(), 0.107));
+	start = new QPoint(pixelCoordToGridCoord(event->x()), pixelCoordToGridCoord(event->y()));
 }
 
-int RenderWindow::nearestMicronValue(int pv, double fac) {
-	double micronval = ((double) pv) * fac;
-	double nearest_int_micronval = round(micronval);
-	double ideal_pixelval = nearest_int_micronval / fac;
-	return (int) ceil(ideal_pixelval);
+// return pointer to a new qpoint on the grid that is closest to the arg pt
+QPoint * RenderWindow::mapPointToGrid(QPoint pt) {
+	return new QPoint(pixelCoordToGridCoord(pt.x()), pixelCoordToGridCoord(pt.y()));
+}
+
+// convert pixel coordinate value to grid coodinate value by rounding to the
+// nearest grid value
+int RenderWindow::pixelCoordToGridCoord(int pv) {
+	if (((((float)pv) / ((float)pixelspermicron)) - (pv/pixelspermicron)) >= .5)
+		return ((pv / pixelspermicron) + 1) * pixelspermicron;
+	else
+		return (pv / pixelspermicron) * pixelspermicron;
 }
 
 void RenderWindow::mouseReleaseEvent(QMouseEvent * event) {
 	delete end;
-	end = new QPoint(nearestMicronValue(event->x(), 0.107), nearestMicronValue(event->y(), 0.107));
+	end = new QPoint(pixelCoordToGridCoord(event->x()), pixelCoordToGridCoord(event->y()));
 	this->update();
 }
 
-void RenderWindow::setEnds(int sx, int sy, int ex, int ey) {
-	delete start;
-	delete end;
-	start = new QPoint(sx, sy);
-	end = new QPoint(ex, ey);
+QPoint * RenderWindow::getOrigin() {
+	return this->start;
 }
 
-RenderWindow::~RenderWindow()
-{
+QPoint * RenderWindow::getEnd() {
+	return this->end;
 }
+
+RenderWindow::~RenderWindow() {}

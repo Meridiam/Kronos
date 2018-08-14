@@ -264,17 +264,17 @@
     <string>CMOS</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="drawbtn">
+  <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>410</x>
+     <x>530</x>
      <y>350</y>
      <width>75</width>
      <height>23</height>
     </rect>
    </property>
    <property name="text">
-    <string>Draw</string>
+    <string>PushButton</string>
    </property>
   </widget>
  </widget>
