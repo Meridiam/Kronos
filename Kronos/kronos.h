@@ -9,6 +9,7 @@ class Kronos : public QWidget
 
 public:
 	Kronos(QWidget *parent = Q_NULLPTR);
+	int nanometerToMicron(long nm, int * frac);
 
 private:
 	Ui::KronosClass ui;
@@ -29,4 +30,6 @@ private slots:
 	void on_lineEdit_returnPressed();
 	void on_yvel_returnPressed();
 	void on_xvel_returnPressed();
+	void on_toggleScaleBtn_clicked();
+	void on_cmosMoveBtn_clicked();
 };

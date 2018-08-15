@@ -82,3 +82,70 @@ void Kronos::on_yvel_returnPressed() {
 void Kronos::on_xvel_returnPressed() {
 	xvelocity = new QString(ui.xvel->text());
 }
+
+void Kronos::on_toggleScaleBtn_clicked() {
+	ui.cmosDisp->setScale(65);
+}
+
+/*
+ * TODO: Test cmosMoveBtn and consider changing Stage move
+ * methods to take two args: whole dist & fractional dist
+ * 
+ * Also remove change scale button and replace with change
+ * scale list of hardcoded scale values
+ *
+ * Also consider if subtraction of fractions really can be
+ * done by subtracting whole parts then fractional parts
+ */
+void Kronos::on_cmosMoveBtn_clicked() {
+	long originNx;
+	long originNy;
+	long laserNx;
+	long laserNy;
+	int originx;
+	int originxfrac;
+	int originy;
+	int originyfrac;
+	int laserx;
+	int laserxfrac;
+	int lasery;
+	int laseryfrac;
+	int xdist;
+	int xdistfrac;
+	int ydist;
+	int ydistfrac;
+
+	ui.cmosDisp->getEndNanometerCoords(&originNx, &originNy);
+	ui.cmosDisp->getLaserNanometerCoords(&laserNx, &laserNy);
+
+	originx = nanometerToMicron(originNx, &originxfrac);
+	originy = nanometerToMicron(originNy, &originyfrac);
+	laserx = nanometerToMicron(laserNx, &laserxfrac);
+	lasery = nanometerToMicron(laserNy, &laseryfrac);
+
+	xdist = originx - laserx;
+	xdistfrac = originxfrac - laserxfrac;
+	ydist = originy - lasery;
+	ydistfrac = originyfrac - laseryfrac;
+
+	QByteArray * data = new QByteArray("B ");
+	data->append(std::to_string(ydist).c_str(), std::to_string(ydist).length());
+	data->append('.');
+	data->append(std::to_string(abs(ydistfrac)).c_str(), std::to_string(abs(ydistfrac)).length());
+	data->append('\r');
+	s->send(data);
+
+	delete data;
+
+	data = new QByteArray("L ");
+	data->append(std::to_string(xdist).c_str(), std::to_string(xdist).length());
+	data->append('.');
+	data->append(std::to_string(abs(xdistfrac)).c_str(), std::to_string(abs(xdistfrac)).length());
+	data->append('\r');
+	s->send(data);
+}
+
+int Kronos::nanometerToMicron(long nm, int * frac) {
+	*frac = ((nm % 1000) - (nm % 10)) / 10;
+	return (nm - *frac) / 1000;
+}

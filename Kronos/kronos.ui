@@ -264,17 +264,43 @@
     <string>CMOS</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="toggleScaleBtn">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>350</y>
+     <x>1020</x>
+     <y>490</y>
      <width>75</width>
      <height>23</height>
     </rect>
    </property>
    <property name="text">
-    <string>PushButton</string>
+    <string>100x</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="cmosMoveBtn">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>490</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Move</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="acquireBtn">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>490</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Acquire</string>
    </property>
   </widget>
  </widget>

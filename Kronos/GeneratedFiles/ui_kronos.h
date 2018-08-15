@@ -42,7 +42,9 @@ public:
     RenderWindow *cmosDisp;
     QLabel *label_6;
     QLabel *label_7;
-    QPushButton *pushButton;
+    QPushButton *toggleScaleBtn;
+    QPushButton *cmosMoveBtn;
+    QPushButton *acquireBtn;
 
     void setupUi(QWidget *KronosClass)
     {
@@ -111,9 +113,15 @@ public:
         label_7 = new QLabel(KronosClass);
         label_7->setObjectName(QStringLiteral("label_7"));
         label_7->setGeometry(QRect(830, 500, 47, 13));
-        pushButton = new QPushButton(KronosClass);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(530, 350, 75, 23));
+        toggleScaleBtn = new QPushButton(KronosClass);
+        toggleScaleBtn->setObjectName(QStringLiteral("toggleScaleBtn"));
+        toggleScaleBtn->setGeometry(QRect(1020, 490, 75, 23));
+        cmosMoveBtn = new QPushButton(KronosClass);
+        cmosMoveBtn->setObjectName(QStringLiteral("cmosMoveBtn"));
+        cmosMoveBtn->setGeometry(QRect(590, 490, 75, 23));
+        acquireBtn = new QPushButton(KronosClass);
+        acquireBtn->setObjectName(QStringLiteral("acquireBtn"));
+        acquireBtn->setGeometry(QRect(30, 490, 75, 23));
 
         retranslateUi(KronosClass);
 
@@ -138,7 +146,9 @@ public:
         stopbtn->setText(QApplication::translate("KronosClass", "Stop", nullptr));
         label_6->setText(QApplication::translate("KronosClass", "EMCCD", nullptr));
         label_7->setText(QApplication::translate("KronosClass", "CMOS", nullptr));
-        pushButton->setText(QApplication::translate("KronosClass", "PushButton", nullptr));
+        toggleScaleBtn->setText(QApplication::translate("KronosClass", "100x", nullptr));
+        cmosMoveBtn->setText(QApplication::translate("KronosClass", "Move", nullptr));
+        acquireBtn->setText(QApplication::translate("KronosClass", "Acquire", nullptr));
     } // retranslateUi
 
 };
