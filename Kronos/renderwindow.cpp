@@ -88,7 +88,7 @@ void RenderWindow::setImage(const char * const uri) {
 }
 
 void RenderWindow::mousePressEvent(QMouseEvent * event) {
-	if (abs(event->x()-laser->x()) < 5 && abs(event->y()-laser->y()) < 5)
+	if (abs(event->x()-laser->x()) < 4 && abs(event->y()-laser->y()) < 4)
 		laserselected = true;
 	else {
 		delete start;

@@ -45,6 +45,12 @@
     <ClCompile Include="renderwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="stagecontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="emccdwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -61,12 +67,21 @@
     <QtMoc Include="renderwindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="stagecontroller.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="emccdwindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="kronos.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="renderwindow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="emccdwindow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

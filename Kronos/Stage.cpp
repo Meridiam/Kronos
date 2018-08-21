@@ -20,6 +20,8 @@ Stage::Stage(QObject* parent) :
 
 	if (m_serial->open(QIODevice::ReadWrite)) {
 		connected = true;
+		m_serial->write(*(new QByteArray("RES,X,0.1\r", 10)));
+		m_serial->write(*(new QByteArray("RES,Y,0.1\r", 10)));
 		m_serial->write(*(new QByteArray("COMP 0\r", 7)));
 	}
 }
@@ -123,6 +125,16 @@ char *Stage::MoveBackward(double distance) {
 //	}
 //	return true;
 //}
+
+char *Stage::isMoving() {
+	if (connected) {
+		QByteArray *data = new QByteArray("$,S\r", 4);
+		return this->send(data);
+	}
+	else {
+		return "ERROR";
+	}
+}
 
 bool Stage::ClearCommands() {
 	if (connected) {

@@ -2,7 +2,8 @@
 
 #include <QtWidgets/QWidget>
 #include "ui_kronos.h"
-#include "Stage.h"
+#include "stagecontroller.h"
+
 class Kronos : public QWidget
 {
 	Q_OBJECT
@@ -32,4 +33,10 @@ private slots:
 	void on_xvel_returnPressed();
 	void on_toggleScaleBtn_clicked();
 	void on_cmosMoveBtn_clicked();
+	void on_acquireBtn_clicked();
+	void on_initBtn_clicked();
+	void display_newtemp(int newTemp);
+
+signals:
+	void initialize_emccd(int targetTemp, int exposureTime, char * dir);
 };

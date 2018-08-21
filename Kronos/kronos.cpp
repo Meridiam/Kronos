@@ -18,7 +18,10 @@ Kronos::Kronos(QWidget *parent)
 	ui.lineEdit->setText(*unit);
 	ui.yvel->setText(*yvelocity);
 	ui.xvel->setText(*xvelocity);
-	connect(this, SIGNAL(update_draw()), ui.cmosDisp, SLOT(on_update_draw()));
+	ui.xSteps->setText(*(new QString("10")));
+	ui.yLines->setText(*(new QString("10")));
+	QObject::connect(this, SIGNAL(initialize_emccd(int, int, char *)), ui.emccdDisp, SLOT(init_disp(int, int, char *)));
+	QObject::connect(ui.emccdDisp, SIGNAL(temp_changed(int)), this, SLOT(display_newtemp(int)));
 }
 
 void Kronos::on_forwardbtn_clicked() {
@@ -88,64 +91,138 @@ void Kronos::on_toggleScaleBtn_clicked() {
 }
 
 /*
- * TODO: Test cmosMoveBtn and consider changing Stage move
- * methods to take two args: whole dist & fractional dist
+ * TODO: Test cmosMoveBtn
  * 
  * Also remove change scale button and replace with change
  * scale list of hardcoded scale values
  *
- * Also consider if subtraction of fractions really can be
- * done by subtracting whole parts then fractional parts
+ * ALSO: CLEAN UP ALL THE CODE BEYOND THIS POINT
  */
 void Kronos::on_cmosMoveBtn_clicked() {
 	long originNx;
 	long originNy;
 	long laserNx;
 	long laserNy;
-	int originx;
-	int originxfrac;
-	int originy;
-	int originyfrac;
-	int laserx;
-	int laserxfrac;
-	int lasery;
-	int laseryfrac;
-	int xdist;
-	int xdistfrac;
-	int ydist;
-	int ydistfrac;
 
-	ui.cmosDisp->getEndNanometerCoords(&originNx, &originNy);
-	ui.cmosDisp->getLaserNanometerCoords(&laserNx, &laserNy);
+	long xdist;
+	long ydist;
 
-	originx = nanometerToMicron(originNx, &originxfrac);
-	originy = nanometerToMicron(originNy, &originyfrac);
-	laserx = nanometerToMicron(laserNx, &laserxfrac);
-	lasery = nanometerToMicron(laserNy, &laseryfrac);
+	if (s != NULL) {
+		ui.cmosDisp->getOriginNanometerCoords(&originNx, &originNy);
+		ui.cmosDisp->getLaserNanometerCoords(&laserNx, &laserNy);
 
-	xdist = originx - laserx;
-	xdistfrac = originxfrac - laserxfrac;
-	ydist = originy - lasery;
-	ydistfrac = originyfrac - laseryfrac;
+		xdist = originNx - laserNx;
+		ydist = originNy - laserNy;
 
-	QByteArray * data = new QByteArray("B ");
-	data->append(std::to_string(ydist).c_str(), std::to_string(ydist).length());
-	data->append('.');
-	data->append(std::to_string(abs(ydistfrac)).c_str(), std::to_string(abs(ydistfrac)).length());
-	data->append('\r');
-	s->send(data);
+		QByteArray * data = new QByteArray("B ");
+		data->append(std::to_string(ydist / 100L).c_str(), std::to_string(ydist / 100L).length());
+		data->append('\r');
+		ui.label->setText(*(new QString(s->send(data))));
 
-	delete data;
+		delete data;
 
-	data = new QByteArray("L ");
-	data->append(std::to_string(xdist).c_str(), std::to_string(xdist).length());
-	data->append('.');
-	data->append(std::to_string(abs(xdistfrac)).c_str(), std::to_string(abs(xdistfrac)).length());
-	data->append('\r');
-	s->send(data);
+		data = new QByteArray("L ");
+		data->append(std::to_string(xdist / 100L).c_str(), std::to_string(xdist / 100L).length());
+		data->append('\r');
+		ui.label->setText(*(new QString(s->send(data))));
+	}
+}
+
+void Kronos::on_acquireBtn_clicked() {
+	long originNx;
+	long originNy;
+	long endNx;
+	long endNy;
+	long xdist;
+	long ydist;
+	long xstep;
+	long ystep;
+
+	if (s != NULL) {
+		ui.cmosDisp->getOriginNanometerCoords(&originNx, &originNy);
+		ui.cmosDisp->getEndNanometerCoords(&endNx, &endNy);
+
+		xdist = originNx - endNx;
+		ydist = originNy - endNy;
+
+		// round up to nearest micron & zero frac part
+		if (xdist % 1000L > 0) {
+			xdist += 1000L;
+			xdist /= 1000L;
+			xdist *= 1000L;
+		}
+
+		if (ydist % 1000L > 0) {
+			ydist += 1000L;
+			ydist /= 1000L;
+			ydist *= 1000L;
+		}
+
+		ui.xWidth->setText(*(new QString(xdist)));
+		ui.yHeight->setText(*(new QString(ydist)));
+
+		xstep = xdist / ui.xSteps->text().toLong();
+		ystep = ydist / ui.yLines->text().toLong();
+
+		int steps = ui.xSteps->text().toInt();
+		int lines = ui.yLines->text().toInt();
+
+		QByteArray * data;
+		char * moving = s->isMoving();
+
+		for (int i = 0; i < lines; i++) {
+			for (int j = 0; j < steps; i++) {
+				while (std::stoi(moving) != 0) {
+					delete moving;
+					moving = s->isMoving();
+				}
+
+				data = new QByteArray("R ");
+				data->append(std::to_string(xstep / 100L).c_str(), std::to_string(xstep / 100L).length());
+				data->append('\r');
+				s->send(data);
+				delete data;
+			}
+			moving = s->isMoving();
+			while (std::stoi(moving) != 0) {
+				delete moving;
+				moving = s->isMoving();
+			}
+
+			data = new QByteArray("L ");
+			data->append(std::to_string(xdist).c_str(), std::to_string(xdist).length());
+			data->append('\r');
+			s->send(data);
+			delete data;
+
+			moving = s->isMoving();
+			while (std::stoi(moving) != 0) {
+				delete moving;
+				moving = s->isMoving();
+			}
+
+			data = new QByteArray("F ");
+			data->append(std::to_string(xstep / 100L).c_str(), std::to_string(xstep / 100L).length());
+			data->append('\r');
+			s->send(data);
+			delete data;
+		}
+	}
 }
 
 int Kronos::nanometerToMicron(long nm, int * frac) {
 	*frac = ((nm % 1000) - (nm % 10)) / 10;
 	return (nm - *frac) / 1000;
 }
+
+void Kronos::on_initBtn_clicked() {
+	char * a = (char *) calloc(sizeof(char), ui.dir->text().length());
+	strcpy(a, ui.dir->text().toStdString().c_str());
+	emit initialize_emccd(ui.emccdTemp->text().toInt(), ui.emccdExposure->text().toInt(), a);
+}
+
+void Kronos::display_newtemp(int newTemp) {
+	ui.emccdTempDisp->setText(*(new QString(newTemp)));
+	this->update();
+}
+

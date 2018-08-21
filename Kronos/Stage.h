@@ -12,6 +12,7 @@ public:
 	char * MoveRight(double distance);
 	char * MoveForward(double distance);
 	char * MoveBackward(double distance);
+	char * isMoving();
 	//bool GetPosition(double * xpos, double * ypos);
 	bool ClearCommands();
 	~Stage();
