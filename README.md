@@ -1,5 +1,4 @@
 # Kronos
-========
 
 Microscopy program built for [Scarcelli Lab](http://onlylightcandothat.org) to 
 coordinate EMCCD scanning and objective cameras with scanning stage to 
