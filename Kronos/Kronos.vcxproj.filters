@@ -45,10 +45,10 @@
     <ClCompile Include="renderwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stagecontroller.cpp">
+    <ClCompile Include="emccdwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="emccdwindow.cpp">
+    <ClCompile Include="emccdworker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -67,10 +67,10 @@
     <QtMoc Include="renderwindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="stagecontroller.h">
+    <QtMoc Include="emccdwindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="emccdwindow.h">
+    <QtMoc Include="emccdworker.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

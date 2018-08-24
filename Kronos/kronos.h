@@ -2,7 +2,7 @@
 
 #include <QtWidgets/QWidget>
 #include "ui_kronos.h"
-#include "stagecontroller.h"
+#include "Stage.h"
 
 class Kronos : public QWidget
 {
@@ -19,6 +19,7 @@ private:
 	QString * unit;
 	QString * yvelocity;
 	QString * xvelocity;
+	QString * buf;
 private slots:
 	void on_forwardbtn_clicked();
 	void on_rightbtn_clicked();
@@ -36,7 +37,9 @@ private slots:
 	void on_acquireBtn_clicked();
 	void on_initBtn_clicked();
 	void display_newtemp(int newTemp);
+	void on_abrtBtn_clicked();
 
 signals:
-	void initialize_emccd(int targetTemp, int exposureTime, char * dir);
+	void initialize_emccd(int targetTemp, float exposureTime, char * dir);
+	void abort_acq();
 };

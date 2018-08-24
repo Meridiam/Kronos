@@ -3,6 +3,7 @@
 #include <QOpenGLWidget>
 #include <QPoint>
 #include "ui_emccdwindow.h"
+#include "emccdworker.h"
 
 class EMCCDWindow : public QOpenGLWidget
 {
@@ -10,11 +11,11 @@ class EMCCDWindow : public QOpenGLWidget
 
 public:
 	EMCCDWindow(QWidget *parent = Q_NULLPTR);
-	int AllocateBuffers();
-	void FreeBuffers();
-	void GetTheImages();
-	bool AcquireImageData();
-	bool DrawLines();
+	//int AllocateBuffers();
+	//void FreeBuffers();
+	//void GetTheImages();
+	//bool AcquireImageData();
+	//bool DrawLines();
 	~EMCCDWindow();
 	void paintGL() override;
 	void resizeGL(int w, int h) override;
@@ -37,26 +38,31 @@ private:
 	QColor * guideColor;
 	int pixelspermicron;
 	int nanometersperpixel;
-	char * aBuffer;
-	int gblX;
-	int gblY;
-	int minT;
-	int maxT;
-	int camTemp;
-	float camExposure;
-	float camAccumTime;
-	float camKineticTime;
+	//char * aBuffer;
+	//int gblX;
+	//int gblY;
+	//int minT;
+	//int maxT;
+	//int camTemp;
+	//float camExposure;
+	//float camAccumTime;
+	//float camKineticTime;
 	int imgSize;
 	long * pImageArray;
-	LARGE_INTEGER giStart;
-	LARGE_INTEGER giEnd;
-	int numloops;
+	//LARGE_INTEGER giStart;
+	//LARGE_INTEGER giEnd;
+	//int numloops;
 	long maxVal;
 	long minVal;
+	EMCCDWorker * updater;
+	QThread * thread;
 
 private slots:
-	void init_disp(int targetTemp, int exposureTime, char * dir);
+	void init_disp(int targetTemp, float exposureTime, char * dir);
+	void receive_image(long * imgcpy, int minVal, int maxVal);
 
 signals:
-	void temp_changed(int newTemp);
+	//void temp_changed(int newTemp);
+	void start_worker(int targetTemp, float exposureTime, char * dir);
+	void request_img();
 };

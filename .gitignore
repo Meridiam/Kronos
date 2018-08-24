@@ -330,3 +330,11 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+
+# Non-free libraries
+ATMCD32D.h
+atmcd64m.lib
+atmcd64d.dll
+Prior.h
+Prior.dll
+Prior.lib

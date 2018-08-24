@@ -20,9 +20,16 @@ Stage::Stage(QObject* parent) :
 
 	if (m_serial->open(QIODevice::ReadWrite)) {
 		connected = true;
-		m_serial->write(*(new QByteArray("RES,X,0.1\r", 10)));
-		m_serial->write(*(new QByteArray("RES,Y,0.1\r", 10)));
+		m_serial->write(*(new QByteArray("RES,s,0.1\r", 10)));
+		char * dump = (char *)calloc(sizeof(char), 65535);
+		m_serial->waitForReadyRead();
+		m_serial->read(dump, 65535);
+		delete dump;
 		m_serial->write(*(new QByteArray("COMP 0\r", 7)));
+		m_serial->waitForReadyRead();
+		dump = (char *)calloc(sizeof(char), 65535);
+		m_serial->read(dump, 65535);
+		delete dump;
 	}
 }
 
@@ -105,30 +112,9 @@ char *Stage::MoveBackward(double distance) {
 	}
 }
 
-//bool Stage::GetPosition(double *xpos, double *ypos) {
-//	if (connected) {
-//		QByteArray *cmd = new QByteArray("PS\r", 3);
-//		char *ret = this->send(cmd);
-//		if (std::string("ERROR").compare(ret) != 0) {
-//			std::string retvals = std::string(ret).;
-//			size_t delim = retvals.find_first_of(',', 0);
-//			if (delim = std::string::npos) {
-//				free(ret);
-//				ret = this->send(cmd);
-//				retvals = std::string(ret);
-//				delim = retvals.find_first_of(',', 0);
-//			}
-//			*xpos = (std::stod(retvals.substr(0, delim)));
-//			*ypos = (std::stod(retvals.substr(delim + 1, std::string::npos)));
-//			return true;
-//		}
-//	}
-//	return true;
-//}
-
 char *Stage::isMoving() {
 	if (connected) {
-		QByteArray *data = new QByteArray("$,S\r", 4);
+		QByteArray *data = new QByteArray('$,S\r', 4);
 		return this->send(data);
 	}
 	else {

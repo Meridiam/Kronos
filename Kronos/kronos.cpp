@@ -8,7 +8,8 @@ Kronos::Kronos(QWidget *parent)
 	s(NULL),
 	unit(new QString("10000")),
 	yvelocity(new QString("10000")),
-	xvelocity(new QString("10000"))
+	xvelocity(new QString("10000")),
+	buf(new QString("20"))
 {
 	ui.setupUi(this);
 	const auto infos = QSerialPortInfo::availablePorts();
@@ -20,7 +21,10 @@ Kronos::Kronos(QWidget *parent)
 	ui.xvel->setText(*xvelocity);
 	ui.xSteps->setText(*(new QString("10")));
 	ui.yLines->setText(*(new QString("10")));
-	QObject::connect(this, SIGNAL(initialize_emccd(int, int, char *)), ui.emccdDisp, SLOT(init_disp(int, int, char *)));
+	ui.emccdExposure->setText(*(new QString("0.1")));
+	ui.emccdTemp->setText(*(new QString("-60")));
+	ui.dir->setText(*(new QString("C:\\Users\\Refractive Index\\source\\repos\\Kronos\\x64\\Debug")));
+	QObject::connect(this, SIGNAL(initialize_emccd(int, float, char *)), ui.emccdDisp, SLOT(init_disp(int, float, char *)));
 	QObject::connect(ui.emccdDisp, SIGNAL(temp_changed(int)), this, SLOT(display_newtemp(int)));
 }
 
@@ -139,6 +143,9 @@ void Kronos::on_acquireBtn_clicked() {
 	long ystep;
 
 	if (s != NULL) {
+#ifdef DEBUGGING_MODE
+		OutputDebugString(L"STAGE ON!\n");
+#endif
 		ui.cmosDisp->getOriginNanometerCoords(&originNx, &originNy);
 		ui.cmosDisp->getEndNanometerCoords(&endNx, &endNy);
 
@@ -157,7 +164,9 @@ void Kronos::on_acquireBtn_clicked() {
 			ydist /= 1000L;
 			ydist *= 1000L;
 		}
-
+#ifdef DEBUGGING_MODE
+		OutputDebugString(L"DIST INIT DONE!\n");
+#endif
 		ui.xWidth->setText(*(new QString(xdist)));
 		ui.yHeight->setText(*(new QString(ydist)));
 
@@ -167,44 +176,73 @@ void Kronos::on_acquireBtn_clicked() {
 		int steps = ui.xSteps->text().toInt();
 		int lines = ui.yLines->text().toInt();
 
+#ifdef DEBUGGING_MODE
+		OutputDebugString(L"STEP INIT DONE!\n");
+#endif
+
 		QByteArray * data;
 		char * moving = s->isMoving();
+#ifdef DEBUGGING_MODE
+		std::string str = std::string(moving);
+		std::wstring str2(str.length(), L' '); // Make room for characters
 
+		// Copy string to wstring.
+		std::copy(str.begin(), str.end(), str2.begin());
+		OutputDebugString(str2.c_str());
+#endif
 		for (int i = 0; i < lines; i++) {
 			for (int j = 0; j < steps; i++) {
 				while (std::stoi(moving) != 0) {
 					delete moving;
 					moving = s->isMoving();
+#ifdef DEBUGGING_MODE
+					OutputDebugString(L"MOVING!\n");
+#endif
 				}
 
 				data = new QByteArray("R ");
 				data->append(std::to_string(xstep / 100L).c_str(), std::to_string(xstep / 100L).length());
 				data->append('\r');
 				s->send(data);
+#ifdef DEBUGGING_MODE
+				OutputDebugString(L"X RIGHT!\n");
+#endif
 				delete data;
 			}
 			moving = s->isMoving();
 			while (std::stoi(moving) != 0) {
 				delete moving;
 				moving = s->isMoving();
+#ifdef DEBUGGING_MODE
+				OutputDebugString(L"MOVING!\n");
+#endif
 			}
 
 			data = new QByteArray("L ");
 			data->append(std::to_string(xdist).c_str(), std::to_string(xdist).length());
 			data->append('\r');
 			s->send(data);
+#ifdef DEBUGGING_MODE
+			OutputDebugString(L"X LEFT!\n");
+#endif
 			delete data;
 
 			moving = s->isMoving();
 			while (std::stoi(moving) != 0) {
 				delete moving;
 				moving = s->isMoving();
+#ifdef DEBUGGING_MODE
+				OutputDebugString(L"MOVING!\n");
+#endif
 			}
 
 			data = new QByteArray("F ");
 			data->append(std::to_string(xstep / 100L).c_str(), std::to_string(xstep / 100L).length());
 			data->append('\r');
 			s->send(data);
+#ifdef DEBUGGING_MODE
+			OutputDebugString(L"Y FORWARD!\n");
+#endif
 			delete data;
 		}
 	}
@@ -218,11 +256,18 @@ int Kronos::nanometerToMicron(long nm, int * frac) {
 void Kronos::on_initBtn_clicked() {
 	char * a = (char *) calloc(sizeof(char), ui.dir->text().length());
 	strcpy(a, ui.dir->text().toStdString().c_str());
-	emit initialize_emccd(ui.emccdTemp->text().toInt(), ui.emccdExposure->text().toInt(), a);
+	int targetT = ui.emccdTemp->text().toInt();
+	int exposure = ui.emccdExposure->text().toFloat();
+	emit initialize_emccd(targetT, exposure, a);
 }
 
 void Kronos::display_newtemp(int newTemp) {
-	ui.emccdTempDisp->setText(*(new QString(newTemp)));
-	this->update();
+	delete buf;
+	buf = new QString(std::to_string(newTemp).c_str());
+	ui.emccdTempDisp->setText(*buf);
+	qApp->processEvents();
 }
 
+void Kronos::on_abrtBtn_clicked() {
+	emit abort_acq();
+}
