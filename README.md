@@ -1,6 +1,6 @@
 # Kronos
 
-Kronos is a microscopy program built for [Scarcelli Lab](http://onlylightcandothat.org) to 
+Kronos is a WIP microscopy program built for [Scarcelli Lab](http://onlylightcandothat.org) to 
 coordinate EMCCD and objective cameras with a scanning stage for the purpose of automating 
 image capture and _data analysis (WIP)_ for research on a novel material analysis method.
 
