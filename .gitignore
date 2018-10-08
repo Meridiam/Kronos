@@ -338,3 +338,8 @@ atmcd64d.dll
 Prior.h
 Prior.dll
 Prior.lib
+MT_USBCamera_SDK.h
+MT_USBCamera_SDK.dll
+MT_USBCamera_SDK.lib
+MT_USBCamera_SDK_Stdcall.dll
+MtUsbLib.dll

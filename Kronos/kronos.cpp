@@ -19,6 +19,9 @@ Kronos::Kronos(QWidget *parent)
 	ui.lineEdit->setText(*unit);
 	ui.yvel->setText(*yvelocity);
 	ui.xvel->setText(*xvelocity);
+	ui.emccdTempDisp->setText(*(new QString("")));
+	ui.xWidth->setText(*(new QString("")));
+	ui.yHeight->setText(*(new QString("")));
 	ui.xSteps->setText(*(new QString("10")));
 	ui.yLines->setText(*(new QString("10")));
 	ui.emccdExposure->setText(*(new QString("0.1")));
@@ -259,6 +262,13 @@ void Kronos::on_initBtn_clicked() {
 	int targetT = ui.emccdTemp->text().toInt();
 	int exposure = ui.emccdExposure->text().toFloat();
 	emit initialize_emccd(targetT, exposure, a);
+}
+
+void Kronos::on_initMightExBtn_clicked() {
+	//MTUSB_InitDevice();
+	//DEV_HANDLE dHandle = MTUSB_ShowOpenDeviceDialog();
+	//MTUSB_StartCameraEngine(NULL, dHandle);
+	//MTUSB_ShowFrameControlPanel(dHandle, false, false, "Testing", 0, 0);
 }
 
 void Kronos::display_newtemp(int newTemp) {

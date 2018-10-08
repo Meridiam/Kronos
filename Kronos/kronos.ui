@@ -476,7 +476,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>InitCams</string>
+    <string>InitEMCCD</string>
    </property>
   </widget>
   <widget class="QPushButton" name="abrtBtn">
@@ -539,6 +539,19 @@
    </property>
    <property name="text">
     <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="initMightExBtn">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>380</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>InitMightEx</string>
    </property>
   </widget>
  </widget>

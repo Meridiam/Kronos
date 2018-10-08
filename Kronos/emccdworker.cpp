@@ -10,7 +10,6 @@ EMCCDWorker::EMCCDWorker(QObject *parent)
 }
 
 void EMCCDWorker::EMCCD_Init(int targetTemp, float exposureTime, char * dir) {
-	numloops = 10000;
 
 #ifdef DEBUGGING_MODE
 	OutputDebugString(L"SIGNAL RECEIVED!\n");

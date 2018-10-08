@@ -1,0 +1,44 @@
+library MT_USBCamera_SDK
+
+EXPORTS
+
+      MTUSB_InitDevice
+      MTUSB_UnInitDevice
+      MTUSB_OpenDevice
+      MTUSB_ShowOpenDeviceDialog
+      MTUSB_GetModuleNo
+      MTUSB_GetSerialNo
+      MTUSB_StartCameraEngine
+      MTUSB_StopCameraEngine
+      MTUSB_SetCameraWorkMode
+      MTUSB_SetExternalParameters
+      MTUSB_WaitingExternalTrigger
+      MTUSB_ShowFrameControlPanel
+      MTUSB_HideFrameControlPanel
+      MTUSB_ShowVideoWindow
+      MTUSB_DisplayVideoWindow
+      MTUSB_StartFrameGrab
+      MTUSB_StopFrameGrab
+      MTUSB_GetFrameSetting
+      MTUSB_SetFrameSetting
+      MTUSB_SetResolution
+      MTUSB_SetStartPosition
+      MTUSB_SetGain
+      MTUSB_SetExposureTime
+      MTUSB_SetGammaValue
+      MTUSB_SetGammaTable
+      MTUSB_SetShowMode
+      MTUSB_SetWhiteBalance
+      MTUSB_SetFrameRateLevel
+      MTUSB_SetAutoExposure
+      MTUSB_GetCurrentFrameRate
+      MTUSB_GetLastBMPFrame
+      MTUSB_GetCurrentFrame
+      MTUSB_GetCurrentFrame2
+      MTUSB_InstallFrameHooker
+      MTUSB_InstallDeviceHooker
+      MTUSB_SaveFramesToFiles
+      MTUSB_SetLEDBrightness
+      MTUSB_SetGPIOConifg
+      MTUSB_SetGPIOInOut
+
