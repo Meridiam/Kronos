@@ -36,7 +36,6 @@ private slots:
 	void on_cmosMoveBtn_clicked();
 	void on_acquireBtn_clicked();
 	void on_initBtn_clicked();
-	void on_initMightExBtn_clicked();
 	void display_newtemp(int newTemp);
 	void on_abrtBtn_clicked();
 

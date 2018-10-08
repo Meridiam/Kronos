@@ -15,7 +15,7 @@ public:
 	//void FreeBuffers();
 	//void GetTheImages();
 	//bool AcquireImageData();
-	//bool DrawLines(); 
+	//bool DrawLines();
 	~EMCCDWindow();
 	void paintGL() override;
 	void resizeGL(int w, int h) override;

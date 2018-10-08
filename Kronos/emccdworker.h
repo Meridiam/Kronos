@@ -28,6 +28,7 @@ private:
 	long * pImageArray;
 	LARGE_INTEGER giStart;
 	LARGE_INTEGER giEnd;
+	int numloops;
 	long maxVal;
 	long minVal;
 private slots:

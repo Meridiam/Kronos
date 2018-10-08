@@ -162,8 +162,10 @@ void EMCCDWindow::receive_image(long * imgcpy, int minVal, int maxVal) {
 }
 
 EMCCDWindow::~EMCCDWindow() {
-	thread->quit();
-	thread->wait();
+	if (thread != NULL) {
+		thread->quit();
+		thread->wait();
+	}
 }
 
 //void EMCCDWindow::init_disp(int targetTemp, float exposureTime, char * dir) {

@@ -65,7 +65,6 @@ public:
     QLabel *label_14;
     QLabel *label_15;
     QLabel *emccdTempDisp;
-    QPushButton *initMightExBtn;
 
     void setupUi(QWidget *KronosClass)
     {
@@ -200,9 +199,6 @@ public:
         emccdTempDisp = new QLabel(KronosClass);
         emccdTempDisp->setObjectName(QStringLiteral("emccdTempDisp"));
         emccdTempDisp->setGeometry(QRect(340, 390, 47, 13));
-        initMightExBtn = new QPushButton(KronosClass);
-        initMightExBtn->setObjectName(QStringLiteral("initMightExBtn"));
-        initMightExBtn->setGeometry(QRect(690, 380, 75, 23));
 
         retranslateUi(KronosClass);
 
@@ -241,12 +237,11 @@ public:
         inputLabel->setText(QApplication::translate("KronosClass", "Input", nullptr));
         label_11->setText(QApplication::translate("KronosClass", "EMExposure", nullptr));
         label_13->setText(QApplication::translate("KronosClass", "SetTemp", nullptr));
-        initBtn->setText(QApplication::translate("KronosClass", "InitEMCCD", nullptr));
+        initBtn->setText(QApplication::translate("KronosClass", "InitCams", nullptr));
         abrtBtn->setText(QApplication::translate("KronosClass", "Abort", nullptr));
         label_14->setText(QApplication::translate("KronosClass", "Driver Directory:", nullptr));
         label_15->setText(QApplication::translate("KronosClass", "Temp:", nullptr));
         emccdTempDisp->setText(QApplication::translate("KronosClass", "TextLabel", nullptr));
-        initMightExBtn->setText(QApplication::translate("KronosClass", "InitMightEx", nullptr));
     } // retranslateUi
 
 };
