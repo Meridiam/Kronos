@@ -16,7 +16,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
 #include "emccdwindow.h"
-#include "renderwindow.h"
+#include "overviewwindow.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -40,7 +40,7 @@ public:
     QPushButton *runbtn;
     QPushButton *stopbtn;
     EMCCDWindow *emccdDisp;
-    RenderWindow *cmosDisp;
+    overviewwindow *cmosDisp;
     QLabel *label_6;
     QLabel *label_7;
     QPushButton *toggleScaleBtn;
@@ -65,12 +65,15 @@ public:
     QLabel *label_14;
     QLabel *label_15;
     QLabel *emccdTempDisp;
+    QPushButton *initOverviewBtn;
+    QLabel *label_16;
+    QLineEdit *stagePortName;
 
     void setupUi(QWidget *KronosClass)
     {
         if (KronosClass->objectName().isEmpty())
             KronosClass->setObjectName(QStringLiteral("KronosClass"));
-        KronosClass->resize(1228, 856);
+        KronosClass->resize(1338, 926);
         forwardbtn = new QPushButton(KronosClass);
         forwardbtn->setObjectName(QStringLiteral("forwardbtn"));
         forwardbtn->setGeometry(QRect(120, 180, 75, 23));
@@ -95,7 +98,7 @@ public:
         disconnectbtn->setGeometry(QRect(20, 50, 75, 23));
         label_2 = new QLabel(KronosClass);
         label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(100, 40, 91, 16));
+        label_2->setGeometry(QRect(20, 80, 91, 16));
         lineEdit = new QLineEdit(KronosClass);
         lineEdit->setObjectName(QStringLiteral("lineEdit"));
         lineEdit->setGeometry(QRect(100, 140, 113, 20));
@@ -122,26 +125,26 @@ public:
         stopbtn->setGeometry(QRect(440, 230, 75, 23));
         emccdDisp = new EMCCDWindow(KronosClass);
         emccdDisp->setObjectName(QStringLiteral("emccdDisp"));
-        emccdDisp->setGeometry(QRect(20, 520, 640, 320));
-        cmosDisp = new RenderWindow(KronosClass);
+        emccdDisp->setGeometry(QRect(20, 590, 640, 320));
+        cmosDisp = new overviewwindow(KronosClass);
         cmosDisp->setObjectName(QStringLiteral("cmosDisp"));
-        cmosDisp->setGeometry(QRect(680, 430, 531, 411));
+        cmosDisp->setGeometry(QRect(680, 430, 640, 480));
         cmosDisp->setToolTipDuration(-13);
         label_6 = new QLabel(KronosClass);
         label_6->setObjectName(QStringLiteral("label_6"));
-        label_6->setGeometry(QRect(320, 500, 47, 13));
+        label_6->setGeometry(QRect(320, 570, 47, 13));
         label_7 = new QLabel(KronosClass);
         label_7->setObjectName(QStringLiteral("label_7"));
-        label_7->setGeometry(QRect(930, 410, 47, 13));
+        label_7->setGeometry(QRect(990, 410, 31, 16));
         toggleScaleBtn = new QPushButton(KronosClass);
         toggleScaleBtn->setObjectName(QStringLiteral("toggleScaleBtn"));
-        toggleScaleBtn->setGeometry(QRect(1120, 400, 75, 23));
+        toggleScaleBtn->setGeometry(QRect(1240, 400, 75, 23));
         cmosMoveBtn = new QPushButton(KronosClass);
         cmosMoveBtn->setObjectName(QStringLiteral("cmosMoveBtn"));
         cmosMoveBtn->setGeometry(QRect(690, 400, 75, 23));
         acquireBtn = new QPushButton(KronosClass);
         acquireBtn->setObjectName(QStringLiteral("acquireBtn"));
-        acquireBtn->setGeometry(QRect(30, 490, 75, 23));
+        acquireBtn->setGeometry(QRect(30, 560, 75, 23));
         xSteps = new QLineEdit(KronosClass);
         xSteps->setObjectName(QStringLiteral("xSteps"));
         xSteps->setGeometry(QRect(30, 440, 113, 20));
@@ -156,16 +159,16 @@ public:
         yLines->setGeometry(QRect(160, 440, 113, 20));
         label_10 = new QLabel(KronosClass);
         label_10->setObjectName(QStringLiteral("label_10"));
-        label_10->setGeometry(QRect(1080, 340, 47, 13));
+        label_10->setGeometry(QRect(1200, 320, 47, 13));
         xWidth = new QLabel(KronosClass);
         xWidth->setObjectName(QStringLiteral("xWidth"));
-        xWidth->setGeometry(QRect(1140, 340, 47, 13));
+        xWidth->setGeometry(QRect(1260, 320, 47, 13));
         label_12 = new QLabel(KronosClass);
         label_12->setObjectName(QStringLiteral("label_12"));
-        label_12->setGeometry(QRect(1080, 360, 47, 13));
+        label_12->setGeometry(QRect(1200, 340, 47, 13));
         yHeight = new QLabel(KronosClass);
         yHeight->setObjectName(QStringLiteral("yHeight"));
-        yHeight->setGeometry(QRect(1140, 360, 47, 13));
+        yHeight->setGeometry(QRect(1260, 340, 47, 13));
         inputLabel = new QLabel(KronosClass);
         inputLabel->setObjectName(QStringLiteral("inputLabel"));
         inputLabel->setGeometry(QRect(430, 310, 47, 13));
@@ -183,10 +186,10 @@ public:
         label_13->setGeometry(QRect(160, 370, 47, 13));
         initBtn = new QPushButton(KronosClass);
         initBtn->setObjectName(QStringLiteral("initBtn"));
-        initBtn->setGeometry(QRect(580, 470, 75, 23));
+        initBtn->setGeometry(QRect(580, 540, 75, 23));
         abrtBtn = new QPushButton(KronosClass);
         abrtBtn->setObjectName(QStringLiteral("abrtBtn"));
-        abrtBtn->setGeometry(QRect(580, 490, 75, 23));
+        abrtBtn->setGeometry(QRect(580, 560, 75, 23));
         dir = new QLineEdit(KronosClass);
         dir->setObjectName(QStringLiteral("dir"));
         dir->setGeometry(QRect(700, 10, 511, 20));
@@ -199,6 +202,15 @@ public:
         emccdTempDisp = new QLabel(KronosClass);
         emccdTempDisp->setObjectName(QStringLiteral("emccdTempDisp"));
         emccdTempDisp->setGeometry(QRect(340, 390, 47, 13));
+        initOverviewBtn = new QPushButton(KronosClass);
+        initOverviewBtn->setObjectName(QStringLiteral("initOverviewBtn"));
+        initOverviewBtn->setGeometry(QRect(1240, 380, 75, 23));
+        label_16 = new QLabel(KronosClass);
+        label_16->setObjectName(QStringLiteral("label_16"));
+        label_16->setGeometry(QRect(110, 20, 101, 16));
+        stagePortName = new QLineEdit(KronosClass);
+        stagePortName->setObjectName(QStringLiteral("stagePortName"));
+        stagePortName->setGeometry(QRect(110, 40, 113, 20));
 
         retranslateUi(KronosClass);
 
@@ -237,11 +249,14 @@ public:
         inputLabel->setText(QApplication::translate("KronosClass", "Input", nullptr));
         label_11->setText(QApplication::translate("KronosClass", "EMExposure", nullptr));
         label_13->setText(QApplication::translate("KronosClass", "SetTemp", nullptr));
-        initBtn->setText(QApplication::translate("KronosClass", "InitCams", nullptr));
+        initBtn->setText(QApplication::translate("KronosClass", "InitEMCCD", nullptr));
         abrtBtn->setText(QApplication::translate("KronosClass", "Abort", nullptr));
         label_14->setText(QApplication::translate("KronosClass", "Driver Directory:", nullptr));
         label_15->setText(QApplication::translate("KronosClass", "Temp:", nullptr));
         emccdTempDisp->setText(QApplication::translate("KronosClass", "TextLabel", nullptr));
+        initOverviewBtn->setText(QApplication::translate("KronosClass", "InitCam", nullptr));
+        label_16->setText(QApplication::translate("KronosClass", "Port Name (COMX):", nullptr));
+        stagePortName->setText(QApplication::translate("KronosClass", "COM8", nullptr));
     } // retranslateUi
 
 };

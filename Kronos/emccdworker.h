@@ -28,7 +28,6 @@ private:
 	long * pImageArray;
 	LARGE_INTEGER giStart;
 	LARGE_INTEGER giEnd;
-	int numloops;
 	long maxVal;
 	long minVal;
 private slots:
@@ -36,6 +35,6 @@ private slots:
 	void GetTheImages();
 	void StopWorker();
 signals:
-	void temp_changed(int newTemp);
-	void new_image(long * img, int minVal, int maxVal);
+	void emccd_temp_changed(int newTemp);
+	void emccd_new_image(long * img, int minVal, int maxVal);
 };

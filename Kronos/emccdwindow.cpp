@@ -12,8 +12,7 @@ EMCCDWindow::EMCCDWindow(QWidget *parent)
 	//	pixelspermicron will always be ceil(actual pixels per micron) 
 	//	because actual pixels per micron could be floating point value, 
 	//	which is obviously impossible to render on a screen.
-	pixelspermicron(10),
-	nanometersperpixel(107)
+	pixelspercamerapixel(10)
 {
 	ui.setupUi(this);
 }
@@ -82,10 +81,10 @@ QPoint * EMCCDWindow::mapPointToGrid(QPoint pt) {
 // convert pixel coordinate value to grid coodinate value by rounding to the
 // nearest grid value
 int EMCCDWindow::pixelCoordToGridCoord(int pv) {
-	if (((((float)pv) / ((float)pixelspermicron)) - (pv / pixelspermicron)) >= .5)
-		return ((pv / pixelspermicron) + 1) * pixelspermicron;
+	if (((((float)pv) / ((float)pixelspercamerapixel)) - (pv / pixelspercamerapixel)) >= .5)
+		return ((pv / pixelspercamerapixel) + 1) * pixelspercamerapixel;
 	else
-		return (pv / pixelspermicron) * pixelspermicron;
+		return (pv / pixelspercamerapixel) * pixelspercamerapixel;
 }
 
 void EMCCDWindow::mouseReleaseEvent(QMouseEvent * event) {
@@ -102,13 +101,8 @@ QPoint * EMCCDWindow::getEnd() {
 	return this->end;
 }
 
-long EMCCDWindow::pixelValToNanometerVal(int px) {
-	return (((long)px) * ((long)nanometersperpixel));
-}
-
 void EMCCDWindow::setScale(int nanometersperpixel) {
-	this->pixelspermicron = ceil(1000 / nanometersperpixel);
-	this->nanometersperpixel = nanometersperpixel;
+	this->pixelspercamerapixel = ceil(1000 / nanometersperpixel);
 
 	// Reset position of start and end cursors
 	delete start;
@@ -120,37 +114,26 @@ void EMCCDWindow::setScale(int nanometersperpixel) {
 	this->update();
 }
 
-void EMCCDWindow::getOriginNanometerCoords(long * x, long * y) {
-	*x = pixelValToNanometerVal(start->x());
-	*y = pixelValToNanometerVal(start->y());
-}
-
-void EMCCDWindow::getEndNanometerCoords(long * x, long * y) {
-	*x = pixelValToNanometerVal(end->x());
-	*y = pixelValToNanometerVal(end->y());
-}
-
-void EMCCDWindow::init_disp(int targetTemp, float exposureTime, char *dir) {
+void EMCCDWindow::emccd_init_disp(int targetTemp, float exposureTime, char *dir) {
 	if (!thread) {
 		thread = new QThread(this);
 		updater = new EMCCDWorker(0);
 		updater->moveToThread(thread);
 
-		connect(thread, SIGNAL(destroyed()), updater, SLOT(deleteLater()));
-		connect(updater, SIGNAL(temp_changed(int)), this->parent(), SLOT(display_newtemp(int)));
-		connect(updater, SIGNAL(new_image(long *, int, int)), this, SLOT(receive_image(long *, int, int)));
-		connect(this, SIGNAL(start_worker(int, float, char *)), updater, SLOT(EMCCD_Init(int, float, char *)));
-		connect(this->parent(), SIGNAL(abort_acq()), updater, SLOT(StopWorker()));
-		connect(this, SIGNAL(request_img()), updater, SLOT(GetTheImages()));
+		connect(updater, SIGNAL(emccd_temp_changed(int)), this->parent(), SLOT(emccd_display_newtemp(int)));
+		connect(updater, SIGNAL(emccd_new_image(long *, int, int)), this, SLOT(emccd_receive_image(long *, int, int)));
+		connect(this, SIGNAL(emccd_start_worker(int, float, char *)), updater, SLOT(EMCCD_Init(int, float, char *)));
+		connect(this->parent(), SIGNAL(emccd_abort_acq()), updater, SLOT(StopWorker()));
+		connect(this, SIGNAL(emccd_request_img()), updater, SLOT(GetTheImages()));
 
 		thread->start();
 
 		// Must use a signal instead of calling init as method to avoid blocking
-		emit start_worker(targetTemp, exposureTime, dir);
+		emit emccd_start_worker(targetTemp, exposureTime, dir);
 	}
 }
 
-void EMCCDWindow::receive_image(long * imgcpy, int minVal, int maxVal) {
+void EMCCDWindow::emccd_receive_image(long * imgcpy, int minVal, int maxVal) {
 	pImageArray = imgcpy;
 	this->minVal = minVal;
 	this->maxVal = maxVal;
@@ -158,7 +141,7 @@ void EMCCDWindow::receive_image(long * imgcpy, int minVal, int maxVal) {
 
 	// request next img once current img is drawn
 	// uses step-by-step methodology to avoid blocking img retrieval loop in worker thread
-	emit request_img();
+	emit emccd_request_img();
 }
 
 EMCCDWindow::~EMCCDWindow() {

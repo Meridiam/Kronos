@@ -28,8 +28,8 @@ Kronos::Kronos(QWidget *parent)
 	ui.yHeight->setText(*(new QString("")));
 	ui.emccdTempDisp->setText(*(new QString("")));
 
-	QObject::connect(this, SIGNAL(initialize_emccd(int, float, char *)), ui.emccdDisp, SLOT(init_disp(int, float, char *)));
-	QObject::connect(ui.emccdDisp, SIGNAL(temp_changed(int)), this, SLOT(display_newtemp(int)));
+	QObject::connect(this, SIGNAL(initialize_emccd(int, float, char *)), ui.emccdDisp, SLOT(emccd_init_disp(int, float, char *)));
+	QObject::connect(this, SIGNAL(initialize_overview()), ui.cmosDisp, SLOT(overview_init_disp()));
 }
 
 void Kronos::on_forwardbtn_clicked() {
@@ -70,7 +70,7 @@ void Kronos::on_stopbtn_clicked() {
 
 void Kronos::on_connectbtn_clicked() {
 	if (s == NULL) {
-		s = new Stage(this);
+		s = new Stage(this, new QString(ui.stagePortName->text()));
 		ui.label_2->setText(*(new QString("CONNECTED")));
 	}
 }
@@ -265,13 +265,17 @@ void Kronos::on_initBtn_clicked() {
 	emit initialize_emccd(targetT, exposure, a);
 }
 
-void Kronos::display_newtemp(int newTemp) {
+void Kronos::emccd_display_newtemp(int newTemp) {
 	delete buf;
 	buf = new QString(std::to_string(newTemp).c_str());
 	ui.emccdTempDisp->setText(*buf);
-	qApp->processEvents();
+	qApp->processEvents(); //CHANGE GET TEMP LOOP IN EMCCDWORKER TO ITERATIVE (GIVE TEMP THERE THEN REQUEST TEMP HERE) SO YOU CAN REMOVE THIS
+}
+
+void Kronos::on_initOverviewBtn_clicked() {
+	emit initialize_overview();
 }
 
 void Kronos::on_abrtBtn_clicked() {
-	emit abort_acq();
+	emit emccd_abort_acq();
 }

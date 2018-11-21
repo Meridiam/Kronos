@@ -3,13 +3,15 @@
 #include <QSerialPort>
 
 
-Stage::Stage(QObject* parent) :
+Stage::Stage(QObject* parent, QString * portName) :
 	m_serial(new QSerialPort(parent)),
 	connected(false)
 {
 	const auto infos = QSerialPortInfo::availablePorts();
 	for (const QSerialPortInfo &info : infos) {
-		this->info = info;
+		if (info.portName().compare(portName) == 0) {
+			this->info = info;
+		}
 	}
 	m_serial->setPort(this->info);
 	m_serial->setBaudRate(QSerialPort::Baud9600);

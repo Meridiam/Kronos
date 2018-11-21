@@ -10,28 +10,48 @@ EMCCDWorker::EMCCDWorker(QObject *parent)
 }
 
 void EMCCDWorker::EMCCD_Init(int targetTemp, float exposureTime, char * dir) {
-	numloops = 10000;
 
 #ifdef DEBUGGING_MODE
 	OutputDebugString(L"SIGNAL RECEIVED!\n");
 #endif
 
 	aBuffer = dir;
-	Initialize(aBuffer);
-	GetTemperatureRange(&minT, &maxT);
-	GetDetector(&gblX, &gblY);
-	SetTemperature(targetTemp);
-	CoolerON();
+
+	if (Initialize(aBuffer) != DRV_SUCCESS) {
+#ifdef DEBUGGING_MODE
+		OutputDebugString(L"ERROR IN INIT!\n");
+#endif
+	}
+	if (GetTemperatureRange(&minT, &maxT) != DRV_SUCCESS) {
+#ifdef DEBUGGING_MODE
+		OutputDebugString(L"ERROR GETTING TEMP RANGE!\n");
+#endif
+	}
+	if (GetDetector(&gblX, &gblY) != DRV_SUCCESS) {
+#ifdef DEBUGGING_MODE
+		OutputDebugString(L"ERROR GETTING DETECTOR!\n");
+#endif
+	}
+	if (SetTemperature(targetTemp) != DRV_SUCCESS) {
+#ifdef DEBUGGING_MODE
+		OutputDebugString(L"ERROR SETTING TARGET TEMP!\n");
+#endif
+	}
+	if (CoolerON() != DRV_SUCCESS) {
+#ifdef DEBUGGING_MODE
+		OutputDebugString(L"ERROR COOLING!\n");
+#endif
+	}
 
 #ifdef DEBUGGING_MODE
 	OutputDebugString(L"COOLING!\n");
 #endif
 
 	GetTemperature(&camTemp);
-	emit temp_changed(camTemp);
+	emit emccd_temp_changed(camTemp);
 	while (camTemp > targetTemp) {
 		GetTemperature(&camTemp);
-		emit temp_changed(camTemp);
+		emit emccd_temp_changed(camTemp);
 	}
 
 	if (SetAcquisitionMode(5) != DRV_SUCCESS) {
@@ -40,7 +60,7 @@ void EMCCDWorker::EMCCD_Init(int targetTemp, float exposureTime, char * dir) {
 	if (DRV_SUCCESS != SetReadMode(4)) {
 		OutputDebugString(L"SETREADMODE ERROR!\n");
 	}
-	if (DRV_SUCCESS != SetExposureTime(exposureTime)) {
+	if (DRV_SUCCESS != SetExposureTime(0.00001f)) {
 		OutputDebugString(L"SETEXPOSURE ERROR!\n");
 	}
 	if (DRV_SUCCESS != SetVSAmplitude(1)) {
@@ -75,7 +95,10 @@ void EMCCDWorker::EMCCD_Init(int targetTemp, float exposureTime, char * dir) {
 	if (DRV_SUCCESS != SetADChannel(ADnumber)) {
 		OutputDebugString(L"SETADCHANNEL ERROR!\n");
 	}
-	if (DRV_SUCCESS != SetHSSpeed(0, HSnumber)) {
+	if (DRV_SUCCESS != SetHSSpeed(1, HSnumber)) {
+		OutputDebugString(L"SETHSSPEED ERROR!\n");
+	}
+	if (DRV_SUCCESS != SetOutputAmplifier(1)) {
 		OutputDebugString(L"SETHSSPEED ERROR!\n");
 	}
 	if (DRV_SUCCESS != SetVSSpeed(.5)) {
@@ -163,7 +186,7 @@ void EMCCDWorker::GetTheImages() {
 
 			while (camTemp < -20) {
 				GetTemperature(&camTemp);
-				emit temp_changed(camTemp);
+				emit emccd_temp_changed(camTemp);
 			}
 
 			if (DRV_SUCCESS != ShutDown()) {
@@ -184,7 +207,7 @@ void EMCCDWorker::GetTheImages() {
 
 		while (camTemp < -20) {
 			GetTemperature(&camTemp);
-			emit temp_changed(camTemp);
+			emit emccd_temp_changed(camTemp);
 		}
 
 		if (DRV_SUCCESS != ShutDown()) {
@@ -237,7 +260,7 @@ bool EMCCDWorker::DrawLines() {
 
 		long * imgcpy = (long *) calloc(sizeof(long), imgSize);
 		memcpy(imgcpy, pImageArray, sizeof(long) * imgSize);
-		emit new_image(imgcpy, minVal, maxVal);
+		emit emccd_new_image(imgcpy, minVal, maxVal);
 	}
 	else
 		bRetValue = FALSE;

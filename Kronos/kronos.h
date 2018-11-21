@@ -36,10 +36,13 @@ private slots:
 	void on_cmosMoveBtn_clicked();
 	void on_acquireBtn_clicked();
 	void on_initBtn_clicked();
-	void display_newtemp(int newTemp);
+	void emccd_display_newtemp(int newTemp);
+	void on_initOverviewBtn_clicked();
 	void on_abrtBtn_clicked();
 
 signals:
 	void initialize_emccd(int targetTemp, float exposureTime, char * dir);
-	void abort_acq();
+	void initialize_overview();
+	void overview_abort_acq();
+	void emccd_abort_acq();
 };

@@ -5,7 +5,7 @@
 class Stage
 {
 public:
-	Stage(QObject * parent);
+	Stage(QObject * parent, QString * portName);
 	char * send(QByteArray * data);
 	char * MoveAtVelocity(double xspeed, double yspeed);
 	char * MoveLeft(double distance);
